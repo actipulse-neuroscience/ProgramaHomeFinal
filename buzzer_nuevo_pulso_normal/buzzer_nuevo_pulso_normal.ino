@@ -48,7 +48,7 @@ void setup()
   
   float B=Medicion3();//leemos valor de la batería
   Serial.print(B);
-      if (B>=3.2){//Valor mínimo de Bateria 
+      if (B>=3.1){//Valor mínimo de Bateria 
       
         SerialBT.begin("ACTIPULSE_H2"); // si es mayor al minimo, inicia la comunicación Serial BT y prende el led Azul
 digitalWrite(18, HIGH);
@@ -82,7 +82,7 @@ Serial.print(g);
   /**************Si el dato es un 1 (Play)*****************/
   if (g == '1') {
     
-     if (terapia < 683 ) {
+     if (terapia < 690 ) {
           /***Buzzer indicando el inicio de la estimulacion****/
 
 // ledcWriteTone(0, NOTE_A7); // tone 880 HZ freq (PWM_ch,A5)
@@ -112,7 +112,7 @@ f1=0;
     /*****************************************************/
 
 }
-while (SerialBT.available() == 0 && terapia < 683 && SerialBT.hasClient() ) { // mientras se cumplan todas las condiciones ( haya conexiòn BT,la terapia no pase de 45 min, no haya dato en el serial)
+while (SerialBT.available() == 0 && terapia < 690 && SerialBT.hasClient() ) { // mientras se cumplan todas las condiciones ( haya conexiòn BT,la terapia no pase de 45 min, no haya dato en el serial)
  
       while (t <= 1724) //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
       {
@@ -190,17 +190,10 @@ BTSendToPhone(datos); //funcion que envia dichos datos
       digitalWrite(5, LOW);
     }
   }
-  if (g == '3' || terapia >= 683 ) { // si lo que se recibe es un "3", o ya se llegó a los 45 min o se perdió la conexión BT, se para la estimulacion
-    terapia = 684;
-    /********Sonido de Buzezer que indica el final de la Estimulacion*********/
+  if (g == '3' || terapia >= 690 ) { // si lo que se recibe es un "3", o ya se llegó a los 45 min o se perdió la conexión BT, se para la estimulacion
+    terapia = 691;
 
-// ledcWriteTone(0, NOTE_E6); 
-// Duraciontono();
-// Duraciontono();
-// ledcWriteTone(0, NOTE_C6); 
-// Duraciontono();
-// Duraciontono();
-// ledcWrite(0, 0); // tone off
+/********Sonido de Buzezer que indica el final de la Estimulacion*********/
 
 while (f1 <= 234){ //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
 AltoTono(NOTE_E6); //NOTE_A7 tone 880 HZ freq (PWM_ch,A5)
@@ -214,18 +207,13 @@ BajoTono();
 f1++;
       }
 f1=0;
-    
-   // tone(BUZZER_PIN, NOTE_E6, 500, BUZZER_CHANNEL);
-    //noTone(BUZZER_PIN, BUZZER_CHANNEL);
-    //tone(BUZZER_PIN, NOTE_C6, 500, BUZZER_CHANNEL);
-    //noTone(BUZZER_PIN, BUZZER_CHANNEL);
-    //delay(2000);
  /****************************************************************************/
 
     digitalWrite(5, LOW);
  
   }
 }
+
 /******  Rutina de un pulso en alto 1 ms *********/
 void Alto()
 {
@@ -238,7 +226,6 @@ void Alto()
   }
 }
 /*-------------------------------------------*/
-
 
 /******  Rutina de un pulso bajo 740 micro segundos *********/
 void Bajo()
@@ -253,11 +240,10 @@ void Bajo()
 }
 /*-------------------------------------------*/
 
-
 ///******  Parte de medir temperatura  ***************/
 String Medicion2()
 {
-    voltajeSensor2 = analogRead(34);
+    voltajeSensor2 = analogRead(34);//35
 Serial.print("\n ANALOGICO DIVISOR"+String(voltajeSensor2));
   voltajePWM2= ((voltajeSensor2 *3.3)/4096)*1.5;
 Serial.print("\nConversion sensor"+String(voltajePWM2));
@@ -270,8 +256,6 @@ if (celcius2 > 65){
 }
 /////*-----------------------------------------------------*
 
-
-
 ///******** Parte medir bateria  *********************/
 float Medicion3()
 {
@@ -279,7 +263,7 @@ float Medicion3()
   String estado = "0";
   for (int i = 0; i < 10; i++)
   {
-    voltajeSensor3 = analogRead(35);
+    voltajeSensor3 = analogRead(35);//34
     muestra3 = muestra3 + voltajeSensor3;
   }
   voltajePWM3 = muestra3 / 10.0;
@@ -335,17 +319,7 @@ void BajoMediciones()
 }
 /*-------------------------------------------*/
 
-/****** DURACION TONOS *********/
-// void Duraciontono()
-// {
-//   myTime = millis();
-//   myTime2 = millis();
-//   while ((myTime2 - myTime) <= 500)
-//   {
-//     myTime2 = millis();
-//   }
-// }
-/*-------------------------------------------*/
+/***** TONOS *********/
 void AltoTono(unsigned int nota)
 {
 
@@ -357,7 +331,7 @@ void AltoTono(unsigned int nota)
     myTime2 = micros();
   }
 }
-/*-------------------------------------------*/
+
 void BajoTono()
 {
   myTime = micros();
@@ -368,3 +342,4 @@ void BajoTono()
     myTime2 = micros();
   }
 }
+/*-------------------------------------------*/
