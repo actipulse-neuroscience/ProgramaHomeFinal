@@ -28,6 +28,7 @@ String estadoT="0";
 String estadoB="0";
 int t = 0; // para contar el numero de pulsos 
 int f = 0; // para contar el intertren
+int f1 = 0;// para contar el intertren
 int cont = 0; // contar el numero de trenes e intertrenes
 int terapia = 0; // contar el numero de pulsos necesarios para los 45 min
 char g; // variable donde se almacenan play pausa o stop
@@ -84,12 +85,24 @@ Serial.print(g);
      if (terapia < 683 ) {
           /***Buzzer indicando el inicio de la estimulacion****/
 
-ledcWriteTone(0, NOTE_A7); // tone 880 HZ freq (PWM_ch,A5)
-Duraciontono();
-ledcWriteTone(0, NOTE_F6); // tone 1109 Hz freq (PWM_ch,CS6)
-Duraciontono(); // pause 
-ledcWrite(0, 0); // tone off
+// ledcWriteTone(0, NOTE_A7); // tone 880 HZ freq (PWM_ch,A5)
+// Duraciontono();
+// ledcWriteTone(0, NOTE_F6); // tone 1109 Hz freq (PWM_ch,CS6)
+// Duraciontono(); // pause 
+// ledcWrite(0, 0); // tone off
 
+while (f1 <= 234){ //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
+AltoTono(NOTE_A7); //NOTE_A7 tone 880 HZ freq (PWM_ch,A5)
+BajoTono();
+f1++;
+      }
+f1=0;
+while (f1 <= 234){ //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
+AltoTono(NOTE_F6); //NOTE_F6 tone 880 HZ freq (PWM_ch,A5)
+BajoTono();
+f1++;
+      }
+f1=0;
 
     //tone(BUZZER_PIN, NOTE_A7, 250, BUZZER_CHANNEL);
     //noTone(BUZZER_PIN, BUZZER_CHANNEL);
@@ -181,13 +194,26 @@ BTSendToPhone(datos); //funcion que envia dichos datos
     terapia = 684;
     /********Sonido de Buzezer que indica el final de la Estimulacion*********/
 
-ledcWriteTone(0, NOTE_E6); 
-Duraciontono();
-Duraciontono();
-ledcWriteTone(0, NOTE_C6); 
-Duraciontono();
-Duraciontono();
-ledcWrite(0, 0); // tone off
+// ledcWriteTone(0, NOTE_E6); 
+// Duraciontono();
+// Duraciontono();
+// ledcWriteTone(0, NOTE_C6); 
+// Duraciontono();
+// Duraciontono();
+// ledcWrite(0, 0); // tone off
+
+while (f1 <= 234){ //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
+AltoTono(NOTE_E6); //NOTE_A7 tone 880 HZ freq (PWM_ch,A5)
+BajoTono();
+f1++;
+      }
+f1=0;
+while (f1 <= 234){ //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
+AltoTono(NOTE_C6); // tone 880 HZ freq (PWM_ch,A5)
+BajoTono();
+f1++;
+      }
+f1=0;
     
    // tone(BUZZER_PIN, NOTE_E6, 500, BUZZER_CHANNEL);
     //noTone(BUZZER_PIN, BUZZER_CHANNEL);
@@ -310,13 +336,35 @@ void BajoMediciones()
 /*-------------------------------------------*/
 
 /****** DURACION TONOS *********/
-void Duraciontono()
+// void Duraciontono()
+// {
+//   myTime = millis();
+//   myTime2 = millis();
+//   while ((myTime2 - myTime) <= 500)
+//   {
+//     myTime2 = millis();
+//   }
+// }
+/*-------------------------------------------*/
+void AltoTono(unsigned int nota)
 {
-  myTime = millis();
-  myTime2 = millis();
-  while ((myTime2 - myTime) <= 500)
+
+  myTime = micros();
+  myTime2 = micros();
+  ledcWriteTone(0, nota);
+  while ((myTime2 - myTime) <= 1000)//300
   {
-    myTime2 = millis();
+    myTime2 = micros();
   }
 }
 /*-------------------------------------------*/
+void BajoTono()
+{
+  myTime = micros();
+  myTime2 = micros();
+  ledcWrite(0, 0);
+  while ((myTime2 - myTime) <= 1140)//1140
+  {
+    myTime2 = micros();
+  }
+}
