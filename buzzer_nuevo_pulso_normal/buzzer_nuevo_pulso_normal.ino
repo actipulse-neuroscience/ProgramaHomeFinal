@@ -4,7 +4,7 @@
 #include <pitches.h>
 //#define BUZZER_PIN 21
 //#define BUZZER_CHANNEL 0
-#define Sound_drv 26 // sound output GPIO13
+#define Sound_drv 26 //26 sound output GPIO13
 #define PWM_ch 0
 BluetoothSerial SerialBT;
 
@@ -48,7 +48,7 @@ void setup()
   
   float B=Medicion3();//leemos valor de la batería
   Serial.print(B);
-      if (B>=3.1){//Valor mínimo de Bateria 
+      if (B>=2.90){//Valor mínimo de Bateria 
       
         SerialBT.begin("ACTIPULSE_H2"); // si es mayor al minimo, inicia la comunicación Serial BT y prende el led Azul
 digitalWrite(18, HIGH);
@@ -190,18 +190,16 @@ BTSendToPhone(datos); //funcion que envia dichos datos
       digitalWrite(5, LOW);
     }
   }
-  if (g == '3' || terapia >= 690 ) { // si lo que se recibe es un "3", o ya se llegó a los 45 min o se perdió la conexión BT, se para la estimulacion
-    terapia = 691;
-
+  if (g == '3' || terapia == 690 ) { // si lo que se recibe es un "3", o ya se llegó a los 45 min o se perdió la conexión BT, se para la estimulacion
+    
 /********Sonido de Buzezer que indica el final de la Estimulacion*********/
-
-while (f1 <= 234){ //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
+while (f1 <= 234){ 
 AltoTono(NOTE_E6); //NOTE_A7 tone 880 HZ freq (PWM_ch,A5)
 BajoTono();
 f1++;
       }
 f1=0;
-while (f1 <= 234){ //Encierra en un ciclo las subrutinas, 3s ON (Tren de pulso)
+while (f1 <= 234){ 
 AltoTono(NOTE_C6); // tone 880 HZ freq (PWM_ch,A5)
 BajoTono();
 f1++;
@@ -209,9 +207,11 @@ f1++;
 f1=0;
  /****************************************************************************/
 
-    digitalWrite(5, LOW);
+ digitalWrite(5, LOW);
  
   }
+  
+  
 }
 
 /******  Rutina de un pulso en alto 1 ms *********/
@@ -243,7 +243,7 @@ void Bajo()
 ///******  Parte de medir temperatura  ***************/
 String Medicion2()
 {
-    voltajeSensor2 = analogRead(34);//35
+    voltajeSensor2 = analogRead(34);//34
 Serial.print("\n ANALOGICO DIVISOR"+String(voltajeSensor2));
   voltajePWM2= ((voltajeSensor2 *3.3)/4096)*1.5;
 Serial.print("\nConversion sensor"+String(voltajePWM2));
@@ -263,7 +263,7 @@ float Medicion3()
   String estado = "0";
   for (int i = 0; i < 10; i++)
   {
-    voltajeSensor3 = analogRead(35);//34
+    voltajeSensor3 = analogRead(35);//35
     muestra3 = muestra3 + voltajeSensor3;
   }
   voltajePWM3 = muestra3 / 10.0;
@@ -288,8 +288,8 @@ void BTSendToPhone(String string) {
 float AltoMediciones()
 {
   float voltajeSensor = 0.0,Cero=0.0,voltajePWM=0.0;
-  Cero = analogRead(39);
-   voltajeSensor = analogRead(39);
+  Cero = analogRead(39);//39
+   voltajeSensor = analogRead(39);//39
  // Serial.print("\nCero: "+String(voltajeSensor));
   myTime = micros();
   myTime2 = micros();
@@ -331,7 +331,6 @@ void AltoTono(unsigned int nota)
     myTime2 = micros();
   }
 }
-
 void BajoTono()
 {
   myTime = micros();
