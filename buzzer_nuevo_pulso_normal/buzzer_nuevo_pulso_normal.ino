@@ -191,7 +191,7 @@ BTSendToPhone(datos); //funcion que envia dichos datos
     }
   }
   if (g == '3' || terapia == 690 ) { // si lo que se recibe es un "3", o ya se llegó a los 45 min o se perdió la conexión BT, se para la estimulacion
-    
+   terapia=691; 
 /********Sonido de Buzezer que indica el final de la Estimulacion*********/
 while (f1 <= 234){ 
 AltoTono(NOTE_E6); //NOTE_A7 tone 880 HZ freq (PWM_ch,A5)
